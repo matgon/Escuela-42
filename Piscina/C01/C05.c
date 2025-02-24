@@ -1,9 +1,8 @@
-#include <stdlib.h>
-#include <stdio.h>
+#include <unistd.h>
 
 void ft_putstr(char *str){
     int i = 0;
-    while(str[i]) printf("%c\n", str[i++]);
+    while(str[i]) write(1, str[i++], sizeof(char));
 }
 
 int main(){
