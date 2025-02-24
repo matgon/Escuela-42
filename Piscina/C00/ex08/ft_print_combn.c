@@ -13,6 +13,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+const int	g_max_arr = 10;
+
 void	write_and_set_i(int n, int *i, char *comb)
 {
 	write(1, comb, n * sizeof(char));
@@ -31,12 +33,11 @@ void	reset_positions(int n, int i, int *j, char *comb)
 
 void	ft_print_combn(int n)
 {
-	char	*comb;
+	char	comb[g_max_arr];
 	int		i;
 	int		j;
 	int		finished;
 
-	comb = (char *) malloc(sizeof(char) * n);
 	i = 0;
 	while (i < n)
 		comb[i++] = '0' + i;
@@ -52,5 +53,4 @@ void	ft_print_combn(int n)
 			reset_positions(n, i, &j, comb);
 		}
 	}
-	free(comb);
 }
