@@ -3,15 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: matgonza <matgonza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: matgonza <matgonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 20:02:52 by matgon            #+#    #+#             */
-/*   Updated: 2025/04/09 15:18:05 by matgonza         ###   ########.fr       */
+/*   Updated: 2025/04/10 20:57:26 by matgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
+/// @brief Searches for the last character c in s.
+/// @param s: first element to be checked.
+/// @param c: target character.
+/// @return Pointer to the last occurrence of c in s.
 char	*ft_strrchr(const char *s, int c)
 {
 	size_t	i;

@@ -3,20 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: matgonza <matgonza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: matgonza <matgonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:27:50 by matgonza          #+#    #+#             */
-/*   Updated: 2025/04/09 15:45:16 by matgonza         ###   ########.fr       */
+/*   Updated: 2025/04/10 20:20:25 by matgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int ft_atoi(const char *nptr)
+/// @brief Converts a number passed as an string to an integer. 
+/// @param nptr: String
+/// @return Converted integer
+int	ft_atoi(const char *nptr)
 {
 	size_t	i;
-	int sign;
-	int ret;
+	int		sign;
+	int		ret;
 
 	i = 0;
 	ret = 0;

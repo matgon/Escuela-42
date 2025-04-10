@@ -3,15 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   ft_tolower.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: matgonza <matgonza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: matgonza <matgonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 17:32:55 by matgonza          #+#    #+#             */
-/*   Updated: 2025/04/08 17:33:14 by matgonza         ###   ########.fr       */
+/*   Updated: 2025/04/10 20:58:09 by matgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
+/// @brief Converts the character c to lowercase.
+/// @param c: char to be converted.
+/// @return Converted character.
 int	ft_tolower(int c)
 {
 	if (ft_isupper(c))

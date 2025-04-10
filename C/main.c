@@ -1,35 +1,77 @@
 #include <unistd.h>
+#include <stdlib.h>
 
-int	braclose(char *str, char c, int i, int b)
+int	is_delimeter(char c)
 {
-	while (b && *(++str) && (i++))
-		if (*str == c || *str == c + c % 2 + 1)
-			*str == c ? ++b : --b;
+	if (c == ' ' || c == '\t' || c == '\n')
+		return (1);
+	else
+		return (0);
+}
+
+int	count_words(char *str)
+{
+	int	i;
+	int new_word;
+	int ret;
+
+	i = 0;
+	new_word = 1;
+	ret = 0;
+	while(str[i])
+	{
+		if (new_word && !is_delimeter(str[i]))
+			ret++;
+		new_word = 0;
+		if (is_delimeter(str[i]))
+			new_word = 1;
+		i++;
+	}
+	return (ret);
+}
+
+int str_length(char *str)
+{
+	int i = 0;
+	int ret = 0;
+
+	while (!is_delimeter(str[i]))
+	{
+		i++;
+	}
 	return (i);
 }
 
-int	brackets(char *str, char c)
+char    **ft_split(char *str)
 {
-	if (*str == c)
-		return (1);
-	else if (!*str || *str == ')' || *str == '}' || *str == ']')
-		return (0);
-	else if (*str == '(' || *str == '{' || *str == '[')
-		return (brackets(str + 1, *str + *str % 2 + 1)
-			* brackets(str + braclose(str, *str, 1, 1), c));
-	else
-		return (brackets(str + 1, c));
+	int num_words = count_words(str);
+	char **ret = (char **) malloc(sizeof(char *) * num_words + 1);
+	int str_len = 0;
+	int i = 0;
+	int j;
+	
+	while(str[i])
+	{
+		j = 0;
+		str_len = str_length(str + i);
+		ret[i] = (char *) malloc(sizeof(char) * str_len);
+		while (j < str_len)
+		{	
+			ret[i][j] = str[i + j];
+			j++;
+		}
+		if (str_len > 0)
+			i+=str_len;
+		else
+			i++;
+	}
 }
 
 int	main(int ac, char **av)
 {
-	int	i;
-
-	i = 0;
-	if (ac > 1)
-		while (++i < ac)
-			brackets(av[i], 0) ? write(1, "OK\n", 3) : write(1, "Error\n", 6);
-	else
-		write(1, "\n", 1);
-	return (0);
+	char **c = ft_split("Hola que tal  ");
+	char *str;
+	while (*c != NULL){
+		free(*c);
+	}
 }
