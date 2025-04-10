@@ -3,10 +3,18 @@
 void *ft_calloc(size_t nmemb, size_t size)
 {
     void    *ret;
+    size_t  n_bytes;
 
-    ret = malloc(nmemb * size);
-    if (ret == NULL)
-        return (NULL);
-    ft_bzero(ret, nmemb * size);
+    if (nmemb == 0 || size == 0)
+    {
+        ret = malloc(1);
+        n_bytes = 1;
+    }
+    else
+    {
+        ret = malloc(nmemb * size);
+        n_bytes = nmemb * size;
+    }
+    ft_bzero(ret, n_bytes);
     return (ret);
 }
