@@ -1,36 +1,26 @@
-# Nombre de la librería
 NAME = libft.a
-
-# Compilador y flags
-CC = gcc
+OBJDIR = obj
+SRC = $(wildcard *.c)
+OBJ = $(SRC:.c=.o)
+OBJ := $(addprefix $(OBJDIR)/, $(notdir $(OBJ)))
+CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
-# Buscar todos los archivos .c en la carpeta actual
-SRC = $(wildcard *.c)
-
-# Generar archivos .o correspondientes
-OBJ = $(SRC:.c=.o)
-
-# Regla por defecto
 all: $(NAME)
 
-# Construir la librería
 $(NAME): $(OBJ)
 	ar rcs $(NAME) $(OBJ)
 
-# Compilar cada .c a .o
-%.o: %.c
+$(OBJDIR)/%.o: %.c
+	@mkdir -p $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Limpiar archivos objeto
 clean:
-	rm -f $(OBJ)
+	rm -rf $(OBJDIR)
 
-# Limpiar todo
 fclean: clean
 	rm -f $(NAME)
 
-# Reconstrucción
 re: fclean all
 
 .PHONY: all clean fclean re
