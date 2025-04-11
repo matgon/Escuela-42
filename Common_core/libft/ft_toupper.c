@@ -6,7 +6,7 @@
 /*   By: matgonza <matgonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 17:29:06 by matgonza          #+#    #+#             */
-/*   Updated: 2025/04/10 20:58:22 by matgonza         ###   ########.fr       */
+/*   Updated: 2025/04/10 22:06:37 by matgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,5 +19,5 @@ int	ft_toupper(int c)
 {
 	if (ft_islower(c))
 		return (c - 32);
-	return c;
+	return (c);
 }

@@ -6,12 +6,11 @@
 /*   By: matgonza <matgonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 20:02:52 by matgon            #+#    #+#             */
-/*   Updated: 2025/04/10 20:57:26 by matgonza         ###   ########.fr       */
+/*   Updated: 2025/04/11 12:51:53 by matgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-
 /// @brief Searches for the last character c in s.
 /// @param s: first element to be checked.
 /// @param c: target character.
@@ -25,13 +24,13 @@ char	*ft_strrchr(const char *s, int c)
 	pos = 0;
 	while (s[i])
 	{
-		if (s[i] == c)
+		if (s[i] == (unsigned char) c)
 			pos = i;
 		i++;
 	}
-	if (c == '\0' && s[i] == '\0')
-		return ((char *) (s + i));
-	else if (pos >= 0 && s[pos] == c)
-		return ((char *) (s + pos));
+	if ((unsigned char) c == '\0' && s[i] == '\0')
+		return ((char *)s + i);
+	else if (s[pos] == (unsigned char) c)
+		return ((char *)s + pos);
 	return (NULL);
 }

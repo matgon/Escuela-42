@@ -6,7 +6,7 @@
 /*   By: matgonza <matgonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 16:33:17 by matgonza          #+#    #+#             */
-/*   Updated: 2025/04/10 20:40:17 by matgonza         ###   ########.fr       */
+/*   Updated: 2025/04/11 12:04:42 by matgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	unsigned char	*aux1;
 	unsigned char	*aux2;
 
+	if (n == 0 || dest == src)
+		return (dest);
 	i = 0;
 	aux1 = (unsigned char *) dest;
 	aux2 = (unsigned char *) src;

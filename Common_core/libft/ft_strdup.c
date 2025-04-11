@@ -6,7 +6,7 @@
 /*   By: matgonza <matgonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 16:58:11 by matgonza          #+#    #+#             */
-/*   Updated: 2025/04/10 20:48:38 by matgonza         ###   ########.fr       */
+/*   Updated: 2025/04/11 12:44:34 by matgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,14 @@
 char	*ft_strdup(const char *s)
 {
 	size_t	len;
-	size_t	i;
 	char	*ret;
 	char	*aux;
 
 	len = ft_strlen(s);
-	ret = (char *) malloc(len * sizeof(char));
+	ret = (char *) malloc((len + 1) * sizeof(char));
+	if (!ret)
+		return (NULL);
 	aux = (char *) s;
-	i = 0;
-	while (aux[i])
-	{
-		ret[i] = aux[i];
-		i++;
-	}
+	ft_strlcpy(ret, aux, len + 1);
 	return (ret);
 }

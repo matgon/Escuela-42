@@ -6,7 +6,7 @@
 /*   By: matgonza <matgonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 12:14:31 by matgonza          #+#    #+#             */
-/*   Updated: 2025/04/10 20:53:47 by matgonza         ###   ########.fr       */
+/*   Updated: 2025/04/11 11:59:24 by matgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,16 @@
 /// @return pointer to the first element of dest.
 int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
-	size_t i;
+	size_t	i;
 
 	i = 0;
 	while (s1[i] && s2[i] && i < n)
 	{
 		if (s1[i] - s2[i] != 0)
-			return (s1[i] - s2[i]);
+			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 		i++;
 	}
 	if (i < n)
-		return (s1[i] - s2[i]);
+		return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 	return (0);
 }
