@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: matgonza <matgonza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: matgonza <matgonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 18:38:54 by matgonza          #+#    #+#             */
-/*   Updated: 2025/04/12 18:54:31 by matgonza         ###   ########.fr       */
+/*   Updated: 2025/04/12 22:02:02 by matgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,6 @@ static void	recursion(int n, int fd)
 /// @param fd: El file descriptor sobre el que escribir.
 void	ft_putnbr_fd(int n, int fd)
 {
-	size_t	i;
-
-	i = 0;
 	if (n == 0)
 		write(fd, "0", sizeof(char));
 	else if (n < 0)

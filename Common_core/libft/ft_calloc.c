@@ -6,7 +6,7 @@
 /*   By: matgonza <matgonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 20:03:04 by matgonza          #+#    #+#             */
-/*   Updated: 2025/04/10 20:16:25 by matgonza         ###   ########.fr       */
+/*   Updated: 2025/04/13 10:18:29 by matgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	*ft_calloc(size_t nmemb, size_t size)
 		n_bytes = nmemb * size;
 		if (n_bytes / nmemb != size)
 			return (NULL);
-		ret = malloc(nmemb * size);
+		ret = malloc(n_bytes);
 	}
 	if (!ret)
 		return (NULL);

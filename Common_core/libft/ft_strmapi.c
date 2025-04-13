@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strmapi.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: matgonza <matgonza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: matgonza <matgonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 18:05:47 by matgonza          #+#    #+#             */
-/*   Updated: 2025/04/12 18:12:25 by matgonza         ###   ########.fr       */
+/*   Updated: 2025/04/13 11:56:30 by matgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 	i = 0;
 	len = ft_strlen(s);
 	ret = (char *) malloc((len + 1) * sizeof(char));
+	if (!ret)
+		return (NULL);
 	while (s[i])
 	{
 		ret[i] = f(i, s[i]);
