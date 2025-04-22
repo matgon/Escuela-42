@@ -12,12 +12,30 @@
 
 #include "ft_printf.h"
 
+int	write_char(char c)
+{
+	return (write(1, &c, sizeof(char)));
+}
+
+int	write_str(char *str, ssize_t length)
+{
+	ssize_t	i;
+
+	i = 0;
+	while (i < length)
+	{
+		if write_char(str[i]) == -1)
+			return (-1);
+	}
+	return (length);
+}
+
 int	format_char(va_list *arg)
 {
 	char	c;
 
 	c = (char) va_arg(*arg, int);
-	return ((int) write(1, &c, sizeof(char)));
+	return (write_char(c));
 }
 
 int	format_str(va_list *arg)
@@ -29,15 +47,8 @@ int	format_str(va_list *arg)
 	ret = 0;
 	str = (char *) va_arg(*arg, char *);
 	if (!str)
-		ret = write(1, "(null)", sizeof(char) * 6);
-	while (*str)
-	{
-		n_bytes = write(1, str++, sizeof(char));
-		if (n_bytes == -1)
-			return (-1);
-		ret += n_bytes;
-	}
-	return (ret);
+		return (write_str("(null)", 6));
+	return (write_str(str, (int) ft_strlen(str)));
 }
 
 int	format_ptr(va_list *arg)
@@ -50,7 +61,7 @@ int	format_ptr(va_list *arg)
 
 	address = va_arg(*arg, unsigned long);
 	if (!address)
-		return (write(1, "0x0", 3 * sizeof(char)));
+		return (write_str("0x0", 3));
 	hex_address = "0x";
 	i = 17;
 	total = 0;
@@ -65,10 +76,7 @@ int	format_ptr(va_list *arg)
 	while (i < 18 && hex_address[i] == '0')
 		i++;
 	ft_memmove(&hex_address[2], &hex_address[i], 16 - i);
-	//write(1, "0x", sizeof(char) * 2);
-	//write(1, &hex_address[i], 16-i);
-	//return (16 - i + 2);
-	return (write(1, hex_address, 18 - i);
+	return (write_str(hex_address, 18 - i));
 }
 
 int	format_int(va_list *arg)
@@ -78,21 +86,31 @@ int	format_int(va_list *arg)
 
 	n = va_arg(*arg, int);
 	str = ft_itoa(n);
-	ft_putstr_fd(str, 1);
+	n = write_str(str, ft_strlen(str));
 	free(str);
-	return (ft_num_digits(n));
+	return (n);
 }
 
 int	ft_put_unsigned(unsigned int n)
 {
 	int		count;
+	int		ret;
 	char	digit;
 
+	ret = 0;
 	count = 0;
 	if (n >= 10)
-		count += ft_put_unsigned(n / 10);
-	digit = '0' + (n % 10);
-	count += write(1, &digit, 1);
+	{
+		ret = ft_put_unsigned(n/10);
+		if (ret == -1)
+			return (-1);
+		count += ret;
+		digit = '0' + (n % 10);
+		ret = write(1, &digit, 1);
+		if (ret == -1)
+			return (-1);
+		count += ret;
+	}
 	return (count);
 }
 
@@ -110,7 +128,6 @@ int	format_hex(va_list *arg)
 	char				buffer[8];
 	char				*hex_digits = "0123456789abcdef";
 	int					i = 8;
-	int					count = 0;
 
 	num = va_arg(*arg, unsigned int);
 	if (num == 0)
@@ -121,9 +138,7 @@ int	format_hex(va_list *arg)
 		buffer[--i] = hex_digits[num & 0xF];
 		num >>= 4;
 	}
-	while (i < 8)
-		count += write(1, &buffer[i++], 1);
-	return (count);
+	return (write_str(buffer, 8));
 }
 
 int	format_upper_hex(va_list *arg)
@@ -143,9 +158,7 @@ int	format_upper_hex(va_list *arg)
 		buffer[--i] = hex_digits[num & 0xF];
 		num >>= 4;
 	}
-	while (i < 8)
-		count += write(1, &buffer[i++], 1);
-	return (count);
+	return (write_str(buffer, 8));
 }
 
 int	format_percentage(va_list *arg)
