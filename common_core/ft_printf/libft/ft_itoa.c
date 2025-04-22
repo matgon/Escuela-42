@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: matgonza <matgonza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: matgonza <matgonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:30:34 by matgonza          #+#    #+#             */
-/*   Updated: 2025/04/12 18:02:00 by matgonza         ###   ########.fr       */
+/*   Updated: 2025/04/18 14:15:20 by matgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static unsigned int	num_digits(int n)
+int	ft_num_digits(int n)
 {
-	unsigned int	digits;
+	int	digits;
 
 	digits = 0;
 	if (n == 0)
@@ -32,7 +32,7 @@ static unsigned int	num_digits(int n)
 
 static void	init_vars(int n, unsigned int *digits, unsigned int *sign)
 {
-	*digits = num_digits(n);
+	*digits = (unsigned int) ft_num_digits(n);
 	*sign = 0;
 	if (n < 0)
 		*sign = 1;
