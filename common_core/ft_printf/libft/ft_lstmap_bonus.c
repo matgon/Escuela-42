@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstmap_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: matgonza <matgonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: matgonza <matgonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 22:58:56 by matgonza          #+#    #+#             */
-/*   Updated: 2025/04/13 12:14:57 by matgonza         ###   ########.fr       */
+/*   Updated: 2025/04/22 16:52:22 by matgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

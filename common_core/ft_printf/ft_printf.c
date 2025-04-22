@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: matgonza <matgonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: matgonza <matgonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 11:09:34 by matgonza          #+#    #+#             */
-/*   Updated: 2025/04/18 17:10:53 by matgonza         ###   ########.fr       */
+/*   Updated: 2025/04/22 19:25:44 by matgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	write_str(char *str, ssize_t length)
 	i = 0;
 	while (str[i] && i < length)
 	{
-		if (write_char(str[i]) == -1)
+		if (write_char(str[i++]) == -1)
 			return (-1);
 	}
 	return (length);
@@ -41,7 +41,6 @@ int	format_char(va_list *arg)
 int	format_str(va_list *arg)
 {
 	int		ret;
-	ssize_t	n_bytes;
 	char	*str;
 
 	ret = 0;
@@ -56,27 +55,28 @@ int	format_ptr(va_list *arg)
 	char			hex_address[18];
 	unsigned long	address;
 	int				i;
-	int				total;
 	const char		g_hex_digits[16] = "0123456789abcdef";
 
 	address = va_arg(*arg, unsigned long);
 	if (!address)
-		return (write_str("0x0", 3));
-	hex_address = "0x";
+		return (write_str("(nil)", 5));
+	ft_memmove(hex_address, "0x", 2);
 	i = 17;
-	total = 0;
-	while (i >= 0)
+	while (i >= 2)
 	{
-			hex_address[i] = g_hex_digits[address & 0xF];
-			address >>= 4;
-			i--;
-			total++;
+		//write(1, &g_hex_digits[address & 0xF], 1);
+		hex_address[i] = g_hex_digits[address & 0xF];
+		address >>= 4;
+		i--;
 	}
 	i = 2;
 	while (i < 18 && hex_address[i] == '0')
 		i++;
-	ft_memmove(&hex_address[2], &hex_address[i], 16 - i);
-	return (write_str(hex_address, 18 - i));
+	ft_memmove(&hex_address[2], &hex_address[i], 18 - (i-2));
+	// write(1, "\n", 1);
+	// write(1, &(char){i + '0'}, 1);
+	// write(1, "\n", 1);
+	return (write_str(hex_address, 18 - (i - 2)));
 }
 
 int	format_int(va_list *arg)
@@ -111,6 +111,14 @@ int	ft_put_unsigned(unsigned int n)
 			return (-1);
 		count += ret;
 	}
+	else
+	{
+		digit = '0' + (n % 10);
+		ret = write(1, &digit, 1);
+		if (ret == -1)
+			return (-1);
+		count +=  ret;
+	}
 	return (count);
 }
 
@@ -128,17 +136,18 @@ int	format_hex(va_list *arg)
 	char				buffer[8];
 	char				*hex_digits = "0123456789abcdef";
 	int					i = 8;
+	int					digits = 0;
 
 	num = va_arg(*arg, unsigned int);
 	if (num == 0)
-		return (write(1, "0", sizeof(char)));
-
+		return (write(1, "0", 1));
 	while (num > 0 && i > 0)
 	{
 		buffer[--i] = hex_digits[num & 0xF];
 		num >>= 4;
+		digits++;
 	}
-	return (write_str(buffer, 8));
+	return (write_str(&buffer[8 - digits], digits));
 }
 
 int	format_upper_hex(va_list *arg)
@@ -147,17 +156,18 @@ int	format_upper_hex(va_list *arg)
 	char				buffer[8];
 	char				*hex_digits = "0123456789ABCDEF";
 	int					i = 8;
-	int					count = 0;
+	int					digits = 0;
 
 	num = va_arg(*arg, unsigned int);
 	if (num == 0)
-		return (write(1, "0", sizeof(char)));
+		return (write(1, "0", 1));
 	while (num > 0 && i > 0)
 	{
 		buffer[--i] = hex_digits[num & 0xF];
 		num >>= 4;
+		digits++;
 	}
-	return (write_str(buffer, 8));
+	return (write_str(&buffer[8 - digits], digits));
 }
 
 int	format_percentage(va_list *arg)
@@ -220,6 +230,10 @@ int	ft_printf(const char *s, ...)
 
 // int main()
 // {
-// 	printf("primero: %x, despues: %X\n", 0, 0);
-// 	printf("primero: %x, despues: %X", 0, 0);
+// 	int n;
+
+// 	n = 5;
+// 	printf("primero: %p\n", 0);
+// 	n = ft_printf("primero: %p\n", 0);
+// 	//ft_printf("%d", n);
 // }
