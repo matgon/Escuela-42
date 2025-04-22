@@ -22,9 +22,9 @@ int	write_str(char *str, ssize_t length)
 	ssize_t	i;
 
 	i = 0;
-	while (i < length)
+	while (str[i] && i < length)
 	{
-		if write_char(str[i]) == -1)
+		if (write_char(str[i]) == -1)
 			return (-1);
 	}
 	return (length);
@@ -131,7 +131,7 @@ int	format_hex(va_list *arg)
 
 	num = va_arg(*arg, unsigned int);
 	if (num == 0)
-		return (write(1, "0", 1));
+		return (write(1, "0", sizeof(char)));
 
 	while (num > 0 && i > 0)
 	{
@@ -151,8 +151,7 @@ int	format_upper_hex(va_list *arg)
 
 	num = va_arg(*arg, unsigned int);
 	if (num == 0)
-		return (write(1, "0", 1));
-
+		return (write(1, "0", sizeof(char)));
 	while (num > 0 && i > 0)
 	{
 		buffer[--i] = hex_digits[num & 0xF];
