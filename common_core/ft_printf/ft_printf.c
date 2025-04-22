@@ -6,7 +6,7 @@
 /*   By: matgonza <matgonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 11:09:34 by matgonza          #+#    #+#             */
-/*   Updated: 2025/04/22 19:25:44 by matgonza         ###   ########.fr       */
+/*   Updated: 2025/04/22 19:29:59 by matgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ int	format_ptr(va_list *arg)
 	i = 17;
 	while (i >= 2)
 	{
-		//write(1, &g_hex_digits[address & 0xF], 1);
 		hex_address[i] = g_hex_digits[address & 0xF];
 		address >>= 4;
 		i--;
@@ -73,9 +72,6 @@ int	format_ptr(va_list *arg)
 	while (i < 18 && hex_address[i] == '0')
 		i++;
 	ft_memmove(&hex_address[2], &hex_address[i], 18 - (i-2));
-	// write(1, "\n", 1);
-	// write(1, &(char){i + '0'}, 1);
-	// write(1, "\n", 1);
 	return (write_str(hex_address, 18 - (i - 2)));
 }
 
