@@ -42,14 +42,17 @@ int	format_str(va_list *arg)
 
 int	format_ptr(va_list *arg)
 {
-	char			hex_address[16];
+	char			hex_address[18];
 	unsigned long	address;
 	int				i;
 	int				total;
 	const char		g_hex_digits[16] = "0123456789abcdef";
 
 	address = va_arg(*arg, unsigned long);
-	i = 15;
+	if (!address)
+		return (write(1, "0x0", 3 * sizeof(char)));
+	hex_address = "0x";
+	i = 17;
 	total = 0;
 	while (i >= 0)
 	{
@@ -58,12 +61,14 @@ int	format_ptr(va_list *arg)
 			i--;
 			total++;
 	}
-	i = 0;
-	while (i < 16 && hex_address[i] == '0')
+	i = 2;
+	while (i < 18 && hex_address[i] == '0')
 		i++;
-	write(1, "0x", sizeof(char) * 2);
-	write(1, &hex_address[i], 16-i);
-	return (16 - i + 2);
+	ft_memmove(&hex_address[2], &hex_address[i], 16 - i);
+	//write(1, "0x", sizeof(char) * 2);
+	//write(1, &hex_address[i], 16-i);
+	//return (16 - i + 2);
+	return (write(1, hex_address, 18 - i);
 }
 
 int	format_int(va_list *arg)
