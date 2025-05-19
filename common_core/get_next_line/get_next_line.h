@@ -1,23 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_tolower.c                                       :+:      :+:    :+:   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: matgonza <matgonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: matgonza <matgonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/08 17:32:55 by matgonza          #+#    #+#             */
-/*   Updated: 2025/04/10 22:06:42 by matgonza         ###   ########.fr       */
+/*   Created: 2025/05/19 12:26:20 by matgonza          #+#    #+#             */
+/*   Updated: 2025/05/19 15:40:12 by matgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#ifndef	GET_NEXT_LINE_H
+# define	GET_NEXT_LINE_H
 
-/// @brief Converts the character c to lowercase.
-/// @param c: char to be converted.
-/// @return Converted character.
-int	ft_tolower(int c)
-{
-	if (ft_isupper(c))
-		return (c + 32);
-	return (c);
-}
+#ifndef	BUFFER_SIZE
+# define BUFFER_SIZE 1024
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+char	*get_next_line(int fd);
+#endif
