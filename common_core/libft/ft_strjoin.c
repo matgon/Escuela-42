@@ -1,43 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: matgonza <matgonza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: matgonza <matgonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/19 18:02:06 by matgonza          #+#    #+#             */
-/*   Updated: 2025/05/21 15:42:49 by matgonza         ###   ########.fr       */
+/*   Created: 2025/04/11 13:50:48 by matgonza          #+#    #+#             */
+/*   Updated: 2025/04/11 13:59:27 by matgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "libft.h"
 
-size_t	ft_strlen(const char *s)
-{
-	size_t	ret;
-
-	ret = 0;
-	while (s[ret])
-		ret++;
-	return (ret);
-}
-
-size_t	ft_strlcpy(char *dest, char *src, size_t size)
-{
-	unsigned int	i;
-
-	if (size == 0)
-		return (ft_strlen(src));
-	i = 0;
-	while (i < size - 1 && src[i] != '\0')
-	{
-		dest[i] = src[i];
-		i++;
-	}
-	dest[i] = '\0';
-	return (ft_strlen(src));
-}
-
+/// @brief Reserva (con malloc(3)) y devuelve una nueva
+/// string, formada por la concatenación de ’s1’ y
+/// ’s2’.
+/// @param s1: La primera string
+/// @param s2: La string a aniadir a s1
+/// @return La nueva string. Null si falla la reserva de memoria.
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*ret;

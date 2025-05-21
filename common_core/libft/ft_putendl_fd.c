@@ -1,30 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_putendl_fd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: matgonza <matgonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/19 12:26:20 by matgonza          #+#    #+#             */
-/*   Updated: 2025/05/21 13:21:35 by matgonza         ###   ########.fr       */
+/*   Created: 2025/04/12 18:36:36 by matgonza          #+#    #+#             */
+/*   Updated: 2025/04/12 18:41:07 by matgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef	GET_NEXT_LINE_H
-# define	GET_NEXT_LINE_H
+#include "libft.h"
 
-#ifndef	BUFFER_SIZE
-# define BUFFER_SIZE 1024
-#endif
+/// @brief Envía la string ’s’ al file descriptor dado,
+///seguido de un salto de línea.
+/// @param s: La string a enviar. 
+/// @param fd: El file descriptor sobre el que escribir.
+void	ft_putendl_fd(char *s, int fd)
+{
+	size_t	i;
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-
-char	*get_next_line(int fd);
-void	*ft_calloc(size_t nmemb, size_t size);
-size_t	ft_strlen(const char *s);
-size_t	ft_strlcpy(char *dest, char *src, size_t size);
-char	*ft_strjoin(char const *s1, char const *s2);
-
-#endif
+	i = 0;
+	while (s[i])
+		write(fd, &s[i++], sizeof(char));
+	write(fd, "\n", sizeof(char));
+}

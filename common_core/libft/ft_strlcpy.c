@@ -1,27 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   ft_strlcpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: matgonza <matgonza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: matgonza <matgonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/19 18:02:06 by matgonza          #+#    #+#             */
-/*   Updated: 2025/05/21 15:42:49 by matgonza         ###   ########.fr       */
+/*   Created: 2025/04/10 12:12:20 by matgonza          #+#    #+#             */
+/*   Updated: 2025/04/10 21:03:08 by matgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "libft.h"
 
-size_t	ft_strlen(const char *s)
-{
-	size_t	ret;
-
-	ret = 0;
-	while (s[ret])
-		ret++;
-	return (ret);
-}
-
+/// @brief copies up to size - 1 characters from the NUL-terminated
+///			 string src to dst, NUL-terminating the result.
+/// @param dest: pointer to the first element of the destination.
+/// @param src: pointer to the first element that will be copied.
+/// @param size: number of bytes to be copied.
+/// @return Total length of the string it tried to create.
 size_t	ft_strlcpy(char *dest, char *src, size_t size)
 {
 	unsigned int	i;
@@ -36,20 +32,4 @@ size_t	ft_strlcpy(char *dest, char *src, size_t size)
 	}
 	dest[i] = '\0';
 	return (ft_strlen(src));
-}
-
-char	*ft_strjoin(char const *s1, char const *s2)
-{
-	char	*ret;
-	size_t	s1_len;
-	size_t	s2_len;
-
-	s1_len = ft_strlen(s1);
-	s2_len = ft_strlen(s2);
-	ret = (char *) malloc((s1_len + s2_len + 1) * sizeof(char));
-	if (!ret)
-		return (NULL);
-	ft_strlcpy(ret, (char *)s1, s1_len + 1);
-	ft_strlcpy(ret + s1_len, (char *)s2, s2_len + 1);
-	return (ret);
 }
