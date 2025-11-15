@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_get_next_line_utils.c                           :+:      :+:    :+:   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: matgonza <matgonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 21:54:26 by matgonza          #+#    #+#             */
-/*   Updated: 2025/11/15 21:56:56 by matgonza         ###   ########.fr       */
+/*   Updated: 2025/11/15 22:12:12 by matgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_get_next_line.h"
+#include "get_next_line.h"
 
 int	check_nl(char *s)
 {
