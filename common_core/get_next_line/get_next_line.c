@@ -3,69 +3,87 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: matgonza <matgonza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: matgonza <matgonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/19 12:26:13 by matgonza          #+#    #+#             */
-/*   Updated: 2025/05/21 16:47:52 by matgonza         ###   ########.fr       */
+/*   Created: 2025/11/15 21:54:16 by matgonza          #+#    #+#             */
+/*   Updated: 2025/11/15 22:11:13 by matgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "ft_get_next_line.h"
 
-
-char	*reset_buffer(char *ret, char *buff, int i)
+static char	*extract_line(char *cache)
 {
-	char *aux;
-	buff[i] = '\0';
-	aux = ft_strjoin(ret, buff);
-	free(ret);
-	free(buff);
-	return (aux);
-}
-
-char	*get_next_line(int fd){
-	int		i;
-	char	*buff;
-	char	*ret;
-
-	i = 0;
-	buff = (char *) malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	ret = (char *) malloc(sizeof(char) * 1);
-	ret[0] = '\0';
-	while (read(fd, &buff[i], 1) > 0)
-	{
-		if (buff[i++] == '\n')
-			return (reset_buffer(ret, buff, i));
-		if (i == BUFFER_SIZE)
-		{
-			ret = reset_buffer(ret, buff, i);
-			buff = (char *) malloc(sizeof(char) * (BUFFER_SIZE + 1));
-			i = 0;
-		}
-	}
-	if (ft_strlen(ret) > 0 || ft_strlen(buff) > 0)
-	{
-		printf("%d", i);
-		return (reset_buffer(ret, buff, i));
-	}
-	free(buff);
-	free(ret);
-	return (NULL);
-}
-
-#include <fcntl.h>
-int main()
-{
+	int		len;
 	char	*line;
 
-	int fd = open("prueba.txt", O_RDONLY);
-	line = get_next_line(fd);
-	while (line != NULL)
+	if (!cache || !cache[0])
+		return (NULL);
+	len = 0;
+	while (cache[len] && cache[len] != '\n')
+		len++;
+	if (cache[len] == '\n')
+		len++;
+	line = substr_gnl(cache, 0, len);
+	return (line);
+}
+
+static char	*clean_cache(char *cache)
+{
+	int		start;
+	char	*ret;
+
+	start = 0;
+	while (cache[start] && cache[start] != '\n')
+		start++;
+	if (!cache[start])
 	{
-		printf("%s", line);
-		free(line);
-		line = get_next_line(fd);
+		free(cache);
+		return (NULL);
 	}
-	free(line);
-	close(fd);
+	ret = substr_gnl(cache, start + 1, strlen_gnl(cache) - start - 1);
+	free(cache);
+	return (ret);
+}
+
+static char	*read_and_join(int fd, char *cache)
+{
+	char	*buff;
+	int		bytes;
+	int		found;
+
+	buff = malloc(BUFFER_SIZE + 1);
+	found = 0;
+	if (!buff)
+		return (NULL);
+	bytes = 1;
+	while (!found && bytes > 0)
+	{
+		bytes = read(fd, buff, BUFFER_SIZE);
+		if (bytes < 0)
+		{
+			free(buff);
+			return (NULL);
+		}
+		buff[bytes] = '\0';
+		found = check_nl(buff);
+		cache = strjoin_gnl(cache, buff);
+	}
+	free(buff);
+	return (cache);
+}
+
+char	*get_next_line(int fd)
+{
+	static char	*cache;
+	char		*line;
+
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	cache = read_and_join(fd, cache);
+	if (!cache)
+		return (NULL);
+	line = extract_line(cache);
+	cache = clean_cache(cache);
+	return (line);
 }
