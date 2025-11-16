@@ -6,7 +6,7 @@
 /*   By: matgonza <matgonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 21:54:16 by matgonza          #+#    #+#             */
-/*   Updated: 2025/11/15 22:12:18 by matgonza         ###   ########.fr       */
+/*   Updated: 2025/11/16 14:46:32 by matgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ static char	*read_and_join(int fd, char *cache)
 		if (bytes < 0)
 		{
 			free(buff);
+			free(cache);
 			return (NULL);
 		}
 		buff[bytes] = '\0';
