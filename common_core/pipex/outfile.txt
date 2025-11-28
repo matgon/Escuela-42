@@ -1,1 +1,1 @@
-comando completo 2: wc -l
+comando completo 1: ls -lcomando completo 2: wc -l
