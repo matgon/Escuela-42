@@ -1,22 +1,23 @@
-NAME = libftprintf.a
+NAME = pipex
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
 LIBFT_DIR = libft
 LIBFT_LIB = $(LIBFT_DIR)/libft.a
+
 INCLUDES = -I. -I$(LIBFT_DIR)
+
 OBJDIR = obj
 
-SRC = ft_printf_utils.c ft_printf_functions_1.c ft_printf_functions_2.c ft_printf.c
+SRC = pipex.c
 OBJ = $(SRC:.c=.o)
 OBJ := $(addprefix $(OBJDIR)/, $(notdir $(OBJ)))
 
 all: $(NAME)
 
 $(NAME): $(LIBFT_LIB) $(OBJ)
-	@cp $(LIBFT_LIB) $(NAME)
-	@ar rcs $(NAME) $(OBJ)
+	$(CC) $(CFLAGS) $(OBJ) $(LIBFT_LIB) -o $(NAME)
 	@echo "✅ $(NAME) creado correctamente."
 
 $(OBJDIR):
