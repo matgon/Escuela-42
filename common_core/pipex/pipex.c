@@ -30,7 +30,7 @@ void	free_split(char **strs)
 	free(strs);
 }
 
-size_t	count_words_cmd(const char *cmd)
+int	count_words_cmd(const char *cmd)
 {
 	size_t	i;
 	size_t	num_words;
@@ -59,7 +59,7 @@ size_t	count_words_cmd(const char *cmd)
 		i++;
 	}
 	if (in_single || in_double)
-		return ((size_t)-1);  // error: comillas sin cerrar
+		return (-1);
 	return (num_words);
 }
 
@@ -92,21 +92,25 @@ char **pipex_split(char *cmd)
 	size_t	i = 0;
 	size_t	j = 0;
 	size_t	len;
+    int     words = 0;
 	int		in_single = 0;
 	int		in_double = 0;
 	char	**ret;
 
-	ret = malloc((count_words_cmd(cmd) + 1) * sizeof(char *));
+    words = count_words_cmd(cmd);
+    if (words == -1)
+    {
+        return (NULL);
+    }
+	ret = malloc((words + 1) * sizeof(char *));
 	if (!ret)
 		return (NULL);
 	while (cmd[i])
 	{
 		while (cmd[i] == ' ')
 			i++;
-
 		if (!cmd[i])
 			break;
-
 		len = word_len_cmd(cmd, i);
 		ret[j] = malloc(len + 1);
 		if (!ret[j])
@@ -192,7 +196,7 @@ int main(int argc, char **argv, char **envp)
 		close(p[1]);
 		cmd = pipex_split(argv[2]);
 		if (!cmd)
-			error("Failed allocating in split.", 1);
+			error("Failed in split.", 1);
 		for (int i = 0; cmd[i]; i++)
     		printf("ARG[%d]=[%s]\n", i, cmd[i]);
 		path = find_cmd_path(cmd[0], envp);
@@ -219,7 +223,7 @@ int main(int argc, char **argv, char **envp)
 		close(p[1]);
 		cmd = pipex_split(argv[3]);
 		if (!cmd)
-			error("Failed allocating in split.", 1);
+			error("Failed in split.", 1);
 		for (int i = 0; cmd[i]; i++)
     		printf("ARG[%d]=[%s]\n", i, cmd[i]);
 		path = find_cmd_path(cmd[0], envp);
