@@ -30,112 +30,70 @@ void	free_split(char **strs)
 	free(strs);
 }
 
-
-===========================
-size_t	count_words(const char *s, char c)
+char **pipex_split(char *cmd)
 {
-	size_t			i;
-	size_t			num_words;
-	unsigned int	new_word;
+    int single_quotes;
+    int double_quotes;
+    int i;
+    char **ret;
 
-	i = 0;
-	num_words = 0;
-	new_word = 1;
-	while (s[i])
-	{
-		if (new_word && s[i] != c)
-		{
-			num_words++;
-			new_word = 0;
-		}
-		if (s[i++] == c)
-			new_word = 1;
-	}
-	return (num_words);
+    single_quotes = 0;
+    double_quotes = 0;
+    i = 0;
+    while (cmd[i])
+    {
+        if (cmd[i] == ' ' && !single_quotes && !double_quotes)
+        {
+            separo normal;
+        }
+        else if(cmd[i] == '\'' && !double_quotes)
+        {
+            if (single_quotes)
+            {
+                single_quotes = 0;
+                montar string por comillas, añadirlo a ret y aumentar en n posiciones el indice para seguir haciendo el split
+            }
+            else
+                single_quotes = 1;
+        }
+        else if(cmd[i] == '"' && !single_quotes)
+        {
+            if (double_quotes)
+            {
+                double_quotes = 0;
+                montar string por dobles comillas, añadirlo a ret y aumentar en n posiciones el indice para seguir haciendo el split
+            }
+            else
+                double_quotes = 1;
+        }
+    }
 }
-
-size_t	word_length(const char *s, char c)
-{
-	size_t	i;
-	size_t	ret;
-
-	i = 0;
-	ret = 0;
-	while (s[i] && s[i] != c)
-	{
-		ret++;
-		i++;
-	}
-	return (ret);
-}
-
-static void	*clear_mem_leaks(char **s, size_t j)
-{
-	while (j--)
-		free(s[j]);
-	free(s);
-	return (NULL);
-}
-
-static void	init_vars(const char *s, char c, size_t *vars)
-{
-	vars[0] = 0;
-	vars[1] = 0;
-	vars[2] = count_words(s, c);
-	vars[3] = 0;
-}
-
-/// @brief Reserva (utilizando malloc(3)) un array de strings
-/// resultante de separar la string ’s’ en substrings
-/// utilizando el caracter ’c’ como delimitador. El
-/// array debe terminar con un puntero NULL.
-/// @param s: La string a separar.
-/// @param c: El carácter delimitador.
-/// @return El array de nuevas strings resultante de la
-/// separación. NULL si falla la reserva de memoria.
-char	**ft_split(char const *s, char c)
-{
-	char	**ret;
-	size_t	vars[4];
-
-	init_vars(s, c, vars);
-	ret = (char **) malloc((vars[2] + 1) * sizeof(char *));
-	if (!ret)
-		return (NULL);
-	ret[vars[2]] = NULL;
-	while (s[vars[0]])
-	{
-		while (s[vars[0]] == c)
-			vars[0]++;
-		if (s[vars[0]])
-		{
-			vars[3] = word_length(&s[vars[0]], c);
-			ret[vars[1]] = (char *) malloc((vars[3] + 1) * sizeof(char));
-			if (!ret[vars[1]])
-				return (clear_mem_leaks(ret, vars[1]));
-			ft_strlcpy(ret[vars[1]], (char *)&s[vars[0]], vars[3] + 1);
-			vars[1]++;
-			vars[0] += vars[3];
-		}
-	}
-	return (ret);
-}
-===========================
+echo "'hola"
 
 int	check_quotes(char *cmd)
 {
 	int i;
+    int start;
 
 	i = 0;
 	while(cmd[i])
 	{
 		if (cmd[i] == '\'' || cmd[i] == '"')
 		{
-
+            start = i++; //cmd[start] tendra la comilla
+            while(cmd[i] && cmd[i] != cmd[start])
+                i++;
+            if (!cmd[i])
+                return (NULL);
+            else
+                return (start);
 		}
+        i++;
 	}
-
+    return (-1);
 }
+checkeo si hay comillas en el comando. si no hay (devuelve -1), hago el split normal. Si hay (devuelve start o NULL), o devuelvo error o 
+
 
 char	*find_cmd_path(const char *cmd, char **envp)
 {
@@ -199,12 +157,12 @@ int main(int argc, char **argv, char **envp)
 		if (!path)
 		{
 			free_split(cmd);
-			error("Command not found", 1);
+			error("Command not found.", 1);
 		}
 		execve(path, cmd, envp);
 		free_split(cmd);
 		free(path);
-		error("Failed in execve 1", 1);
+		error("Failed in execve 1.", 1);
 	}
 	pid2 = fork();
 	if (pid2 == 0)
