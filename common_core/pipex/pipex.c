@@ -6,7 +6,7 @@
 /*   By: matgonza <matgonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 18:29:27 by matgonza          #+#    #+#             */
-/*   Updated: 2025/11/29 14:04:40 by matgonza         ###   ########.fr       */
+/*   Updated: 2025/12/04 21:04:38 by matgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,69 +30,109 @@ void	free_split(char **strs)
 	free(strs);
 }
 
-char **pipex_split(char *cmd)
+size_t	count_words_cmd(const char *cmd)
 {
-    int single_quotes;
-    int double_quotes;
-    int i;
-    char **ret;
-
-    single_quotes = 0;
-    double_quotes = 0;
-    i = 0;
-    while (cmd[i])
-    {
-        if (cmd[i] == ' ' && !single_quotes && !double_quotes)
-        {
-            separo normal;
-        }
-        else if(cmd[i] == '\'' && !double_quotes)
-        {
-            if (single_quotes)
-            {
-                single_quotes = 0;
-                montar string por comillas, añadirlo a ret y aumentar en n posiciones el indice para seguir haciendo el split
-            }
-            else
-                single_quotes = 1;
-        }
-        else if(cmd[i] == '"' && !single_quotes)
-        {
-            if (double_quotes)
-            {
-                double_quotes = 0;
-                montar string por dobles comillas, añadirlo a ret y aumentar en n posiciones el indice para seguir haciendo el split
-            }
-            else
-                double_quotes = 1;
-        }
-    }
-}
-echo "'hola"
-
-int	check_quotes(char *cmd)
-{
-	int i;
-    int start;
+	size_t	i;
+	size_t	num_words;
+	int		new_word;
+	int		in_single;
+	int		in_double;
 
 	i = 0;
-	while(cmd[i])
+	num_words = 0;
+	new_word = 1;
+	in_single = 0;
+	in_double = 0;
+	while (cmd[i])
 	{
-		if (cmd[i] == '\'' || cmd[i] == '"')
+		if (cmd[i] == '\'' && !in_double)
+			in_single = !in_single;
+		else if (cmd[i] == '"' && !in_single)
+			in_double = !in_double;
+		else if (cmd[i] == ' ' && !in_single && !in_double)
+			new_word = 1;
+		else if (new_word)
 		{
-            start = i++; //cmd[start] tendra la comilla
-            while(cmd[i] && cmd[i] != cmd[start])
-                i++;
-            if (!cmd[i])
-                return (NULL);
-            else
-                return (start);
+			num_words++;
+			new_word = 0;
 		}
-        i++;
+		i++;
 	}
-    return (-1);
+	if (in_single || in_double)
+		return ((size_t)-1);  // error: comillas sin cerrar
+	return (num_words);
 }
-checkeo si hay comillas en el comando. si no hay (devuelve -1), hago el split normal. Si hay (devuelve start o NULL), o devuelvo error o 
+
+size_t	word_len_cmd(const char *cmd, size_t i)
+{
+	size_t	len;
+	int		in_single;
+	int		in_double;
+
+	len = 0;
+	in_single = 0;
+	in_double = 0;
+	while (cmd[i])
+	{
+		if (cmd[i] == '\'' && !in_double)
+			in_single = !in_single;
+		else if (cmd[i] == '"' && !in_single)
+			in_double = !in_double;
+		else if (cmd[i] == ' ' && !in_single && !in_double)
+			break;
+		else
+			len++;
+		i++;
+	}
+	return (len);
+}
+
+char **pipex_split(char *cmd)
+{
+	size_t	i = 0;
+	size_t	j = 0;
+	size_t	len;
+	int		in_single = 0;
+	int		in_double = 0;
+	char	**ret;
+
+	ret = malloc((count_words_cmd(cmd) + 1) * sizeof(char *));
+	if (!ret)
+		return (NULL);
+	while (cmd[i])
+	{
+		while (cmd[i] == ' ')
+			i++;
+
+		if (!cmd[i])
+			break;
+
+		len = word_len_cmd(cmd, i);
+		ret[j] = malloc(len + 1);
+		if (!ret[j])
+			return (NULL);
+
+		size_t k = 0;
+		in_single = 0;
+		in_double = 0;
+		while (cmd[i])
+		{
+			if (cmd[i] == '\'' && !in_double)
+				in_single = !in_single;
+			else if (cmd[i] == '"' && !in_single)
+				in_double = !in_double;
+			else if (cmd[i] == ' ' && !in_single && !in_double)
+				break;
+			else
+				ret[j][k++] = cmd[i];
+			i++;
+		}
+		ret[j][k] = '\0';
+		j++;
+	}
+	ret[j] = NULL;
+	return (ret);
+}
 
 
 char	*find_cmd_path(const char *cmd, char **envp)
@@ -150,9 +190,11 @@ int main(int argc, char **argv, char **envp)
 		close(fd_in);
 		close(p[0]);
 		close(p[1]);
-		cmd = ft_split(argv[2], ' ');
+		cmd = pipex_split(argv[2]);
 		if (!cmd)
 			error("Failed allocating in split.", 1);
+		for (int i = 0; cmd[i]; i++)
+    		printf("ARG[%d]=[%s]\n", i, cmd[i]);
 		path = find_cmd_path(cmd[0], envp);
 		if (!path)
 		{
@@ -175,9 +217,11 @@ int main(int argc, char **argv, char **envp)
 		close(fd_out);
 		close(p[0]);
 		close(p[1]);
-		cmd = ft_split(argv[3], ' ');
+		cmd = pipex_split(argv[3]);
 		if (!cmd)
 			error("Failed allocating in split.", 1);
+		for (int i = 0; cmd[i]; i++)
+    		printf("ARG[%d]=[%s]\n", i, cmd[i]);
 		path = find_cmd_path(cmd[0], envp);
 		if (!path)
 		{
