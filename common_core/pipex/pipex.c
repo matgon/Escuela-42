@@ -6,7 +6,7 @@
 /*   By: matgonza <matgonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 18:29:27 by matgonza          #+#    #+#             */
-/*   Updated: 2025/12/04 21:04:38 by matgonza         ###   ########.fr       */
+/*   Updated: 2025/12/13 16:32:24 by matgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 void	error(char *msg, int status)
 {
-	perror(msg);
+	write(2, msg, ft_strlen(msg));
 	exit(status);
 }
 
 void	free_split(char **strs)
 {
-	int	i;
+	int i;
 
 	if (!strs)
 		return;
@@ -99,9 +99,9 @@ char **pipex_split(char *cmd)
 
     words = count_words_cmd(cmd);
     if (words == -1)
-    {
+	{
         return (NULL);
-    }
+	}
 	ret = malloc((words + 1) * sizeof(char *));
 	if (!ret)
 		return (NULL);
@@ -138,7 +138,6 @@ char **pipex_split(char *cmd)
 	return (ret);
 }
 
-
 char	*find_cmd_path(const char *cmd, char **envp)
 {
 	int		i;
@@ -155,10 +154,10 @@ char	*find_cmd_path(const char *cmd, char **envp)
 	i = 0;
 	while (paths_in_path[i])
 	{
-		aux = ft_strjoin(paths_in_path[i], "/"); //aqui no se esta liberando el primer join
+		aux = ft_strjoin(paths_in_path[i], "/");
 		path = ft_strjoin(aux, cmd);
 		free(aux);
-		if (access(path, X_OK) == 0) //devuelve 0 cuando esta bien
+		if (access(path, X_OK) == 0)
 		{
 			free_split(paths_in_path);
 			return (path);
@@ -170,76 +169,92 @@ char	*find_cmd_path(const char *cmd, char **envp)
 	return (NULL);
 }
 
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
-	pid_t pid1, pid2, status;
-	int fd_in, fd_out;
-	int p[2];
-	char **cmd;
-	char *path;
+	pid_t	pid1, pid2;
+	int		status;
+	int		p[2];
+	int		fd_in, fd_out;
+	char	**cmd;
+	char	*path;
 
-	if (pipe(p))
-	{
-		perror("Error en la creacion de la pipe.");
-		exit(1);
-	}
+	if (pipe(p) == -1)
+		error("Pipe creation failed\n", 1);
+
+	// Hijo 1
 	pid1 = fork();
 	if (pid1 == 0)
 	{
 		fd_in = open(argv[1], O_RDONLY);
 		if (fd_in == -1)
-			error("Failed opening file 1.", 1);
-		if (dup2(fd_in, STDIN_FILENO) == -1 || dup2(p[1], STDOUT_FILENO) == -1)
-			error("Failed duplicating descriptors.", 1);
+			error("Failed opening infile\n", 1);
+
+		if (dup2(fd_in, STDIN_FILENO) == -1)
+			error("dup2 stdin failed\n", 1);
+		if (dup2(p[1], STDOUT_FILENO) == -1)
+			error("dup2 stdout failed\n", 1);
+
 		close(fd_in);
 		close(p[0]);
 		close(p[1]);
+
 		cmd = pipex_split(argv[2]);
 		if (!cmd)
-			error("Failed in split.", 1);
-		for (int i = 0; cmd[i]; i++)
-    		printf("ARG[%d]=[%s]\n", i, cmd[i]);
+			error("Failed in split\n", 1);
+
+		if (ft_strchr(cmd[0], '/'))
+			execve(cmd[0], cmd, envp);
+
 		path = find_cmd_path(cmd[0], envp);
 		if (!path)
-		{
-			free_split(cmd);
-			error("Command not found.", 1);
-		}
+			error("Command not found\n", 127);
+
 		execve(path, cmd, envp);
 		free_split(cmd);
 		free(path);
-		error("Failed in execve 1.", 1);
+		error("Execve failed\n", 1);
 	}
+
+	// Hijo 2
 	pid2 = fork();
 	if (pid2 == 0)
 	{
-		fd_out = open(argv[argc-1], O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		fd_out = open(argv[argc - 1], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		if (fd_out == -1)
-			error("Failed opening file 2.", 1);
-		if (dup2(p[0], STDIN_FILENO == -1 || dup2(fd_out, STDOUT_FILENO) == -1))
-			error("Failed duplicating descriptors.", 1);
+			error("Failed opening outfile\n", 1);
+
+		if (dup2(p[0], STDIN_FILENO) == -1)
+			error("dup2 stdin failed\n", 1);
+		if (dup2(fd_out, STDOUT_FILENO) == -1)
+			error("dup2 stdout failed\n", 1);
+
 		close(fd_out);
 		close(p[0]);
 		close(p[1]);
+
 		cmd = pipex_split(argv[3]);
 		if (!cmd)
-			error("Failed in split.", 1);
-		for (int i = 0; cmd[i]; i++)
-    		printf("ARG[%d]=[%s]\n", i, cmd[i]);
+			error("Failed in split\n", 1);
+
+		if (ft_strchr(cmd[0], '/'))
+			execve(cmd[0], cmd, envp);
+
 		path = find_cmd_path(cmd[0], envp);
 		if (!path)
-		{
-			free_split(cmd);
-			error("Command not found.", 127);
-		}
+			error("Command not found\n", 127);
+
 		execve(path, cmd, envp);
 		free_split(cmd);
 		free(path);
-		error("Failed in execve 2.", 1);
+		error("Execve failed\n", 1);
 	}
+
 	close(p[0]);
 	close(p[1]);
 	waitpid(pid1, NULL, 0);
 	waitpid(pid2, &status, 0);
-	return (status >> 8);
+
+	if (WIFEXITED(status))
+		exit(WEXITSTATUS(status));
+	return (1);
 }
