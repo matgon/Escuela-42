@@ -6,7 +6,7 @@
 /*   By: matgonza <matgonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 18:29:27 by matgonza          #+#    #+#             */
-/*   Updated: 2025/12/13 16:32:24 by matgonza         ###   ########.fr       */
+/*   Updated: 2025/12/15 19:38:03 by matgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,6 +185,7 @@ int	main(int argc, char **argv, char **envp)
 	pid1 = fork();
 	if (pid1 == 0)
 	{
+		close(p[0]);
 		fd_in = open(argv[1], O_RDONLY);
 		if (fd_in == -1)
 			error("Failed opening infile\n", 1);
@@ -195,7 +196,6 @@ int	main(int argc, char **argv, char **envp)
 			error("dup2 stdout failed\n", 1);
 
 		close(fd_in);
-		close(p[0]);
 		close(p[1]);
 
 		cmd = pipex_split(argv[2]);
@@ -219,6 +219,7 @@ int	main(int argc, char **argv, char **envp)
 	pid2 = fork();
 	if (pid2 == 0)
 	{
+		close(p[1]);
 		fd_out = open(argv[argc - 1], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		if (fd_out == -1)
 			error("Failed opening outfile\n", 1);
@@ -230,7 +231,6 @@ int	main(int argc, char **argv, char **envp)
 
 		close(fd_out);
 		close(p[0]);
-		close(p[1]);
 
 		cmd = pipex_split(argv[3]);
 		if (!cmd)
